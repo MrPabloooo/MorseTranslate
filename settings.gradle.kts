@@ -22,6 +22,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "MorseTl"
+rootProject.name = "MorseTranslator"
 include(":app")
  
