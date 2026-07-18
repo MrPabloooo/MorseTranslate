@@ -1,5 +1,7 @@
 package com.example.morsetl;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,9 +17,11 @@ import android.os.Vibrator;
 
 import android.hardware.camera2.CameraManager;
 import android.content.Context;
+import android.content.ClipboardManager;
 
 
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -33,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
 
 
     private EditText texteditor;
+
+    private Button Cancelbtn;
 
     private Button Submitbtn;
 
@@ -51,6 +57,15 @@ public class MainActivity extends AppCompatActivity {
     private String cameraId;
 
     private Button flshbtn;
+
+    private TextView output;
+
+
+    private Boolean Canceled;
+
+    private Button copybtn;
+
+    public String Translation;
 
 
     @Override
@@ -84,6 +99,9 @@ public class MainActivity extends AppCompatActivity {
         texteditor = findViewById(R.id.txteditor);
         Submitbtn = findViewById(R.id.Sub);
         flshbtn = findViewById(R.id.flasher);
+        Cancelbtn = findViewById(R.id.Cncl);
+        output = findViewById(R.id.outp);
+        copybtn = findViewById(R.id.cpy);
 
 
         CanRun = 1;
@@ -109,6 +127,11 @@ public class MainActivity extends AppCompatActivity {
 
                 String text = texteditor.getText().toString();
                 text = text.toUpperCase();
+
+                Canceled = false;
+
+                Translation = "";
+                output.setText("Output: ");
 
                 playText(text, 0);
 
@@ -145,6 +168,11 @@ public class MainActivity extends AppCompatActivity {
                 String text = texteditor.getText().toString();
                 text = text.toUpperCase();
 
+                Canceled = false;
+
+                Translation = "";
+                output.setText("Output: ");
+
                 flashText(text, 0);
 
 
@@ -161,8 +189,67 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        Cancelbtn.setOnClickListener(new View.OnClickListener()  {
+            public void onClick(View v) {
 
 
+                Canceled = true;
+
+                handler.removeCallbacksAndMessages(null);
+                turnOffFlash();
+                Translation = "";
+                output.setText("Output: ");
+
+                Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                vibrator.cancel();
+
+                CanRun = 1;
+
+                Toast.makeText(MainActivity.this, "Canceled", Toast.LENGTH_SHORT).show();
+
+
+
+
+
+            }
+        });
+
+
+
+        copybtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                if(CanRun == 1) {
+
+                    CanRun = 0;
+
+                    ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                    ClipData clip = ClipData.newPlainText("Coped Output", Translation.toString());
+                    clipboard.setPrimaryClip(clip);
+
+                    playShort();
+
+                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                        CanRun = 1;
+                    }, ShortTime);
+
+
+                }
+
+                else {
+
+                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                        if(CanRun == 0) {
+                            Toast.makeText(MainActivity.this, "Please wait", Toast.LENGTH_SHORT).show();
+                        }
+                    }, ShortTime);
+
+                }
+
+
+
+            }
+        });
 
 
 
@@ -249,6 +336,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void playMorse(String morse, Runnable onFinished) {
 
+        if (Canceled) {
+            CanRun = 1;
+            return;
+        }
+
+
         if (morse == null) {
             onFinished.run();
             return;
@@ -259,12 +352,26 @@ public class MainActivity extends AppCompatActivity {
 
         int delay = 0;
 
+        if (Translation == null) {
+            Translation = "   ";
+        }
+        else {
+            Translation = Translation + "   ";
+        }
+
+            output.setText("Output: " + Translation);
+
+
+
         for (char c : morse.toCharArray()) {
 
             if (c == '.') {
 
                 handler.postDelayed(() -> {
                     playShort();
+                    Translation = Translation + ".";
+                    output.setText("Output: " + Translation);
+
                 }, delay);
 
                 delay += ShortTime + DelayTimer;
@@ -273,6 +380,9 @@ public class MainActivity extends AppCompatActivity {
 
                 handler.postDelayed(() -> {
                     playLong();
+                    Translation = Translation + "-";
+                    output.setText("Output: " + Translation);
+
                 }, delay);
 
                 delay += LongTime + DelayTimer;
@@ -294,6 +404,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void flashMorse(String morse, Runnable onFinished) {
 
+        if (Canceled) {
+            CanRun = 1;
+            return;
+        }
+
+
+
         if (morse == null) {
             onFinished.run();
             return;
@@ -304,12 +421,20 @@ public class MainActivity extends AppCompatActivity {
 
         int delay = 0;
 
+
+            Translation = Translation + "   ";
+            output.setText("Output: " + Translation);
+
+
         for (char c : morse.toCharArray()) {
 
             if (c == '.') {
 
                 handler.postDelayed(() -> {
                     flashShort();
+                    Translation = Translation + ".";
+                    output.setText("Output: " + Translation);
+
                 }, delay);
 
                 delay += ShortTime + DelayTimer;
@@ -318,6 +443,9 @@ public class MainActivity extends AppCompatActivity {
 
                 handler.postDelayed(() -> {
                     flashLong();
+                    Translation = Translation + "-";
+                    output.setText("Output: " + Translation);
+
                 }, delay);
 
                 delay += LongTime + DelayTimer;

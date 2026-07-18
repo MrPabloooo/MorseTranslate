@@ -16,6 +16,30 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="30dp"
+                android:orientation="horizontal">
+
+                <View
+                    android:id="@+id/view2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/button2"
+                    android:layout_width="45dp"
+                    android:layout_height="wrap_content"
+                    app:icon="@drawable/baseline_settings_24"
+                    app:iconGravity="textStart"
+                    app:iconPadding="0dp"
+                    app:iconSize="25dp" />
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
@@ -30,8 +54,8 @@
                 android:id="@+id/txteditor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
                 android:layout_marginBottom="20dp"
                 android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
 
@@ -42,8 +66,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="15dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
                 android:orientation="horizontal">
 
                 <Button
@@ -51,22 +75,46 @@
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0"
-                    android:text="Submit" />
-
-                <View
-                    android:id="@+id/view2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1" />
+                    android:text="Vibrate" />
 
                 <Button
                     android:id="@+id/flasher"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
                     android:layout_weight="0"
                     android:text="Flash" />
 
+                <View
+                    android:id="@+id/view5"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/Cncl"
+                    android:layout_width="100dp"
+                    android:layout_height="match_parent"
+                    android:text="Cancel" />
+
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/outp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="45dp"
+                android:layout_marginBottom="15dp"
+                android:layout_weight="0"
+                android:text="Output: " />
+
+            <Button
+                android:id="@+id/cpy"
+                android:layout_width="150dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="30dp"
+                android:text="Copy Output" />
 
         </LinearLayout>
     </ScrollView>
