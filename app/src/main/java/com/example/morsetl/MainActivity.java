@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.camera2.CameraManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -11,15 +12,6 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.view.View;
 import android.widget.Button;
-
-import android.os.VibrationEffect;
-import android.os.Vibrator;
-
-import android.hardware.camera2.CameraManager;
-import android.content.Context;
-import android.content.ClipboardManager;
-
-
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,8 +21,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.room.Room;
 
 import java.util.HashMap;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -65,11 +59,25 @@ public class MainActivity extends AppCompatActivity {
 
     private Button copybtn;
 
+    private Button settingsbtn;
     public String Translation;
+
+    public TextView test;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(),
+                        AppDatabase.class, "database-name")
+                .fallbackToDestructiveMigration()
+                .allowMainThreadQueries()
+                .build();
+        SettingsDao settingsDao = db.SettingsDao();
+
+
+
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
@@ -96,12 +104,32 @@ public class MainActivity extends AppCompatActivity {
         DelayTimer = 300;
         LongDelayTimer = 1250;
 
+
+
+
+        List<Settings> allsettings = settingsDao.getAll();
+
+
+
+       if(allsettings.size() == 0) {
+           Settings settings = new Settings(0, LongTime, ShortTime, LongDelayTimer);
+           settingsDao.insert(settings);
+
+
+       }
+
+
+
         texteditor = findViewById(R.id.txteditor);
         Submitbtn = findViewById(R.id.Sub);
         flshbtn = findViewById(R.id.flasher);
         Cancelbtn = findViewById(R.id.Cncl);
         output = findViewById(R.id.outp);
         copybtn = findViewById(R.id.cpy);
+        settingsbtn = findViewById(R.id.finish);
+
+
+
 
 
         CanRun = 1;
@@ -219,32 +247,41 @@ public class MainActivity extends AppCompatActivity {
         copybtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
-                if(CanRun == 1) {
+                if(Translation != null) {
 
-                    CanRun = 0;
 
-                    ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                    ClipData clip = ClipData.newPlainText("Coped Output", Translation.toString());
-                    clipboard.setPrimaryClip(clip);
+                    if(CanRun == 1) {
 
-                    playShort();
 
-                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                        CanRun = 1;
-                    }, ShortTime);
+                        CanRun = 0;
 
+                        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                        ClipData clip = ClipData.newPlainText("Coped Output", Translation.toString());
+                        clipboard.setPrimaryClip(clip);
+
+                        playShort();
+
+                        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                            CanRun = 1;
+                        }, ShortTime);
+
+
+
+
+                    }
+
+                    else {
+
+                        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                            if(CanRun == 0) {
+                                Toast.makeText(MainActivity.this, "Please wait", Toast.LENGTH_SHORT).show();
+                            }
+                        }, ShortTime);
+
+                    }
 
                 }
 
-                else {
-
-                    new Handler(Looper.getMainLooper()).postDelayed(() -> {
-                        if(CanRun == 0) {
-                            Toast.makeText(MainActivity.this, "Please wait", Toast.LENGTH_SHORT).show();
-                        }
-                    }, ShortTime);
-
-                }
 
 
 
@@ -252,6 +289,22 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        settingsbtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+
+                if (CanRun != 1) {
+                    Toast.makeText(MainActivity.this, "Cancel first", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                else {
+                    Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                    startActivity(intent);
+
+                }
+            }
+
+        });
 
 
 
@@ -552,5 +605,38 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+
+
+
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        AppDatabase db = Room.databaseBuilder(getApplicationContext(),
+                        AppDatabase.class, "database-name")
+                .fallbackToDestructiveMigration()
+                .allowMainThreadQueries()
+                .build();
+        SettingsDao settingsDao = db.SettingsDao();
+
+
+        List<Settings> allsettings = settingsDao.getAll();
+
+        try{
+            allsettings.get(0);
+            LongTime = allsettings.get(0).LongDelayTimer;
+            ShortTime = allsettings.get(0).ShortDelayTimer;
+            LongDelayTimer = allsettings.get(0).Spacing;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
+    }
 
 }
