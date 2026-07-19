@@ -1,6 +1,9 @@
 package com.example.morsetl;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -124,6 +127,17 @@ public class SettingsActivity extends AppCompatActivity {
 
         savebtn.setOnClickListener(new View.OnClickListener()  {
             public void onClick(View v) {
+
+                Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+
+                if (android.os.Build.VERSION.SDK_INT >= 26) {
+                    vibrator.vibrate(
+                            VibrationEffect.createOneShot(
+                                    150,
+                                    VibrationEffect.DEFAULT_AMPLITUDE
+                            )
+                    );
+                }
 
                 Save();
 

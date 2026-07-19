@@ -133,6 +133,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         CanRun = 1;
+        Submitbtn.setClickable(true);
+        flshbtn.setClickable(true);
 
 
 
@@ -151,6 +153,8 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 CanRun = 0;
+                Submitbtn.setClickable(false);
+                flshbtn.setClickable(false);
 
 
                 String text = texteditor.getText().toString();
@@ -191,6 +195,8 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 CanRun = 0;
+                flshbtn.setClickable(false);
+                Submitbtn.setClickable(false);
 
 
                 String text = texteditor.getText().toString();
@@ -232,6 +238,8 @@ public class MainActivity extends AppCompatActivity {
                 vibrator.cancel();
 
                 CanRun = 1;
+                Submitbtn.setClickable(true);
+                flshbtn.setClickable(true);
 
                 Toast.makeText(MainActivity.this, "Canceled", Toast.LENGTH_SHORT).show();
 
@@ -254,6 +262,8 @@ public class MainActivity extends AppCompatActivity {
 
 
                         CanRun = 0;
+                        Submitbtn.setClickable(false);
+                        flshbtn.setClickable(false);
 
                         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                         ClipData clip = ClipData.newPlainText("Coped Output", Translation.toString());
@@ -263,6 +273,8 @@ public class MainActivity extends AppCompatActivity {
 
                         new Handler(Looper.getMainLooper()).postDelayed(() -> {
                             CanRun = 1;
+                            Submitbtn.setClickable(true);
+                            flshbtn.setClickable(true);
                         }, ShortTime);
 
 
@@ -391,6 +403,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (Canceled) {
             CanRun = 1;
+            Submitbtn.setClickable(true);
+            flshbtn.setClickable(true);
             return;
         }
 
@@ -459,6 +473,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (Canceled) {
             CanRun = 1;
+            Submitbtn.setClickable(true);
+            flshbtn.setClickable(true);
             return;
         }
 
@@ -558,6 +574,8 @@ public class MainActivity extends AppCompatActivity {
 
             if (index >= text.length()) {
                 CanRun = 1;
+                Submitbtn.setClickable(true);
+                flshbtn.setClickable(true);
                 return;
             }
 
@@ -577,6 +595,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (index >= text.length()) {
             CanRun = 1;
+            Submitbtn.setClickable(true);
+            flshbtn.setClickable(true);
             return;
         }
 
