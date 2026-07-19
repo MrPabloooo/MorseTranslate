@@ -16,7 +16,8 @@
         android:label="MorseTranslator"
         android:roundIcon="@mipmap/ic_mtl_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MorseTl">
+        android:theme="@style/AppTheme">
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
